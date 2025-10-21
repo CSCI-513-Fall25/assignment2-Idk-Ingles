@@ -11,6 +11,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage; //Our main window for Java FX app
 import javafx.scene.input.KeyEvent;  //This handles keyboard input, 
 import javafx.event.EventHandler;
+import java.util.*; //To use list and observer pattern things
 
 public class OceanExplorer extends Application { //Basically like main class, for Java FX to call start()method
 
@@ -19,9 +20,13 @@ public class OceanExplorer extends Application { //Basically like main class, fo
     OceanMap oceanMap; //Reps island and ocean map
     Ship ship; //Represents ship
     ImageView shipImageView; //Displays ship image
+    ImageView islandImageView;
     AnchorPane root; 
     Scene scene;
     //We already declared da above stuff at class level
+
+    private List<PirateShip> pirates = new ArrayList<>(); //Stores pirates
+    private List<ImageView> pirateViews = new ArrayList<>(); //Displays pirates
 
     @Override  //Java FX automatically calls this, when our pgm runs
     public void start(Stage oceanStage) {  //Our Game Window
@@ -31,6 +36,7 @@ public class OceanExplorer extends Application { //Basically like main class, fo
         root = new AnchorPane();
         drawMap();   //
         loadShipImage();  //Displays ship img
+        loadPirates(); //Loads pirates
 
         scene = new Scene(root, dimension * scale, dimension * scale);
         oceanStage.setTitle("Christopher Columbus Sails the Ocean Blue");
@@ -50,11 +56,17 @@ public class OceanExplorer extends Application { //Basically like main class, fo
 
                 if (grid[x][y]) {
                     rect.setFill(Color.DARKGREEN); //So, color it green if it's an island or else color it water like below
+                    Image islandImage = new Image("island.png",50,50,true,true);
+                    islandImageView = new ImageView(islandImage);
+                    islandImageView.setX(x * scale);
+                    islandImageView.setY(y * scale);
+                    root.getChildren().add(islandImageView);
+                    System.out.println("Island Image: X: " + x + " Y: " + y);
                 } else {
                     rect.setFill(Color.PALETURQUOISE); // ocean color
-                }
-
-                root.getChildren().add(rect);
+                    root.getChildren().add(rect);
+                }            
+                
             }
         }
     }
@@ -65,6 +77,20 @@ public class OceanExplorer extends Application { //Basically like main class, fo
         shipImageView.setX(ship.getShipLocation().getX() * scale);
         shipImageView.setY(ship.getShipLocation().getY() * scale);
         root.getChildren().add(shipImageView);
+    }
+
+    private void loadPirates() { //Method to add pirate ships
+        for (int i = 0; i < 2; i++) {
+            PirateShip pirate = new PirateShip(oceanMap.getRandomEmptyCell()); //creates new pirate
+            pirates.add(pirate);
+            ship.addObserver(pirate); //pirates get notified whenever ship moves
+            Image pirateImage = new Image("pirate.png", 50, 50, true, true);
+            ImageView pirateView = new ImageView(pirateImage);
+            pirateView.setX(pirate.getPirateLocation().getX() * scale);
+            pirateView.setY(pirate.getPirateLocation().getY() * scale);
+            pirateViews.add(pirateView);
+            root.getChildren().add(pirateView);
+        }
     }
 
     private void startSailing() {
@@ -91,6 +117,12 @@ public class OceanExplorer extends Application { //Basically like main class, fo
                 // update ship position
                 shipImageView.setX(ship.getShipLocation().getX() * scale);
                 shipImageView.setY(ship.getShipLocation().getY() * scale);
+
+                //update pirate ships whenever Columbus moves
+                for (int i = 0; i < pirates.size(); i++) {
+                    pirateViews.get(i).setX(pirates.get(i).getPirateLocation().getX() * scale);
+                    pirateViews.get(i).setY(pirates.get(i).getPirateLocation().getY() * scale);
+                }
             }
         });
     }
@@ -99,3 +131,4 @@ public class OceanExplorer extends Application { //Basically like main class, fo
         launch(args);
     }
 }
+
