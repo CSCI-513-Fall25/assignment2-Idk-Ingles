@@ -1,0 +1,14 @@
+In our assignment, pirate ship moves or gets updated whenever Christopher Columbus ship moves in the ocean grid.
+Ocean Map class as a class for initial setup.
+To make a movement on the grid:
+
+
+The design of pirate ships, which is a push/pull model, must be updated whenever the Columbus ship moves in the sea. Based on the location of Columbus Ship, pirate vessels can begin to travel in that direction.
+The optimal approach for handling this circumstance is the observer design pattern. The Subject/Observable can inform observers of any changes occurring at the Observable side.
+When informed of this shift, observers can update their end. Rather than developing unique interfaces, I built upon existing Observer/Observable abstract classes in Java.
+The OceanMap class is used to initially set up and allocate islands and pirate ships, and their positions are saved in the oceanGrid array. Using this grid, the Columbus Ship/Pirate Ship may determine its sailing direction.
+Pirate ship must first know the location of Columbus Ship and then scan its surroundings for any potential hazards in order to determine which direction to travel. I'm sending the oceanGrid array to each Pirate Ship as an argument through the update() method in order to allow it to monitor its surroundings.
+The Control class(ColumbusShipGame) updates the GUI elements of Pirate Ships when the pirate ships or things change position.
+Using their index in arraylist, I'm mapping the pirate ship items and their matching GUI component, PirateShipImageView.
+For instance: let's say we have a pirate ship 1 at index 1 in the arrayList named pirateShips. At index 1 of the pirateShipImageViews arrayList is the GUI element for this pirate ship.
+This allows us to easily manage the pirateShipView objects following each Key pressed event. 
