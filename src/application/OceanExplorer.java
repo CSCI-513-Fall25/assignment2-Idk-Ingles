@@ -65,7 +65,8 @@ public class OceanExplorer extends Application { //Basically like main class, fo
                 } else {
                     rect.setFill(Color.PALETURQUOISE); // ocean color
                     root.getChildren().add(rect);
-                }            
+                
+                  
                 
             }
         }
@@ -81,7 +82,7 @@ public class OceanExplorer extends Application { //Basically like main class, fo
 
     private void loadPirates() { //Method to add pirate ships
         for (int i = 0; i < 2; i++) {
-            PirateShip pirate = new PirateShip(oceanMap.getRandomEmptyCell()); //creates new pirate
+            PirateShip pirate = new PirateShip(oceanMap.getRandomEmptyCell(),oceanMap); //creates new pirate
             pirates.add(pirate);
             ship.addObserver(pirate); //pirates get notified whenever ship moves
             Image pirateImage = new Image("pirate.png", 50, 50, true, true);
@@ -131,4 +132,3 @@ public class OceanExplorer extends Application { //Basically like main class, fo
         launch(args);
     }
 }
-
