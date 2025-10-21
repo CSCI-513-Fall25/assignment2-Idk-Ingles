@@ -1,6 +1,7 @@
 package application;
 
 import java.util.Random;
+import javafx.scene.effect.Light.Point;
 
 public class OceanMap {
 
@@ -38,4 +39,15 @@ public class OceanMap {
     public boolean isIsland(int x, int y) {
         return oceanGrid[x][y];
     }
+
+    public Point getRandomEmptyCell() { //Used to spawn pirates in empty squares
+        while (true) {
+            int x = random.nextInt(dimension);
+            int y = random.nextInt(dimension);
+            if (!oceanGrid[x][y]) {
+                return new Point(x, y, 0, null);
+            }
+        }
+    }
 }
+
