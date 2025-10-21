@@ -1,8 +1,9 @@
 package application;
 
+import java.util.Observable;
 import javafx.scene.effect.Light.Point; 
 //In below Ship class, we are holding position data and logic of movement.
-public class Ship {
+public class Ship extends Observable {
 
     private Point currentLocation;
     // We are keeping the above thing private, as only this class can modify directly.
@@ -20,14 +21,20 @@ public class Ship {
         return currentLocation;  //Basically, returns current ship's position.
     }
 
+    private void notifyPirates() { //Notifies pirate observers when ship moves
+        setChanged();
+        notifyObservers(oceanMap.getMap());
+    }
+
     public void goNorth() {
         int currX = (int) currentLocation.getX();
         int currY = (int) currentLocation.getY(); //We are also casting them into int because grid uses integer numbers.
         int newY = currY - 1; //Calculates the new Y position, so -1 = one cell up.
         if (newY >= 0 && !oceanMap.isIsland(currX, newY)) { 
-     //We use newY>=0 to prevent ship from going outside the top edge.
-        	//Second condition is to make sure, it's not an island square.
+            //We use newY>=0 to prevent ship from going outside the top edge.
+            //Second condition is to make sure, it's not an island square.
             currentLocation.setY(newY); // int widens to double automatically
+            notifyPirates(); //Tell pirates that we moved
         }
     }
 
@@ -37,6 +44,7 @@ public class Ship {
         int newY = currY + 1;
         if (newY < gridSize && !oceanMap.isIsland(currX, newY)) {
             currentLocation.setY(newY);
+            notifyPirates();
         }
     }
 
@@ -46,6 +54,7 @@ public class Ship {
         int newX = currX + 1;
         if (newX < gridSize && !oceanMap.isIsland(newX, currY)) {
             currentLocation.setX(newX);
+            notifyPirates();
         }
     }
 
@@ -55,6 +64,7 @@ public class Ship {
         int newX = currX - 1;
         if (newX >= 0 && !oceanMap.isIsland(newX, currY)) {
             currentLocation.setX(newX);
+            notifyPirates();
         }
     }
 }
